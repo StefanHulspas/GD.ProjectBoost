@@ -21,7 +21,7 @@ public class CollisionHandler : MonoBehaviour
 	private void HandleDefaultCollision()
 	{
 		int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
-		SceneManager.LoadScene(currentSceneIndex);
+		LoadSceneIndex(currentSceneIndex);
 	}
 
 	private void HandleFuelCollision()
@@ -30,5 +30,12 @@ public class CollisionHandler : MonoBehaviour
 
 	private void HandleFinishCollision()
 	{
+		int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+		int nextSceneIndex = (currentSceneIndex + 1) % SceneManager.sceneCountInBuildSettings;
+		LoadSceneIndex(nextSceneIndex);
+	}
+
+	private void LoadSceneIndex(int newSceneIndex) {
+		SceneManager.LoadScene(newSceneIndex);
 	}
 }
