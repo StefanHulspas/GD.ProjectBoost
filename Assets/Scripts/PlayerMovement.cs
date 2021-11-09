@@ -9,6 +9,7 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] private float _upwardThrustPower = 1000;
     [SerializeField] private float _rotationThrustPower = 50;
+    [SerializeField] private AudioClip _thrusterSound;
 
     private bool _thrusterIsActive;
 
@@ -31,7 +32,7 @@ public class PlayerMovement : MonoBehaviour
 	private void HandleAudio()
 	{
         if (_thrusterIsActive && !_audioSource.isPlaying) {
-            _audioSource.Play();
+            _audioSource.PlayOneShot(_thrusterSound);
 		} 
         else if (!_thrusterIsActive && _audioSource.isPlaying) {
             _audioSource.Stop();

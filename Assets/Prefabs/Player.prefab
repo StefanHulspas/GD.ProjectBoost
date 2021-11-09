@@ -107,6 +107,7 @@ GameObject:
   - component: {fileID: 142611379815965760}
   - component: {fileID: 142611379815965761}
   - component: {fileID: 820328505516419313}
+  - component: {fileID: 100221820}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -143,7 +144,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 8
+  m_Constraints: 56
   m_CollisionDetection: 0
 --- !u!114 &142611379815965761
 MonoBehaviour:
@@ -159,6 +160,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _upwardThrustPower: 750
   _rotationThrustPower: 50
+  _thrusterSound: {fileID: 8300000, guid: 2dc73671c772a5a4b8cb78bf56eb6a3c, type: 3}
 --- !u!82 &820328505516419313
 AudioSource:
   m_ObjectHideFlags: 0
@@ -255,6 +257,20 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &100221820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 142611379815965767}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 156d8b353f436ea40851f81f7f3757d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _winSound: {fileID: 8300000, guid: 8572e1ca59adbfb4d8571107bf572f53, type: 3}
+  _crashSound: {fileID: 8300000, guid: bd8cc748b464c9042a1d0db629e8f31f, type: 3}
 --- !u!1 &1109831124844576198
 GameObject:
   m_ObjectHideFlags: 0
