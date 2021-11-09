@@ -5,8 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class CollisionHandler : MonoBehaviour
 {
-	[SerializeField] public AudioClip _winSound;
-	[SerializeField] public AudioClip _crashSound;
+	[SerializeField] private SceneTransitionParams _winParams;
+	[SerializeField] private SceneTransitionParams _crashParams;
 
 	private AudioSource _audioSource;
 
@@ -31,27 +31,41 @@ public class CollisionHandler : MonoBehaviour
 	private void HandleDefaultCollision()
 	{
 		int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
-		SceneTransitionParams SceneTransition = new SceneTransitionParams("You Crashed!!", 1f, _crashSound);
-		StartCoroutine(LoadSceneIndex(currentSceneIndex, SceneTransition));
+		LoadSceneIndex(currentSceneIndex, _crashParams);
 	}
 
 	private void HandleFinishCollision()
 	{
 		int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
 		int nextSceneIndex = (currentSceneIndex + 1) % SceneManager.sceneCountInBuildSettings;
-		SceneTransitionParams SceneTransition = new SceneTransitionParams("You Win!!", 1f, _winSound);
-		StartCoroutine(LoadSceneIndex(nextSceneIndex, SceneTransition));
+		LoadSceneIndex(nextSceneIndex, _winParams);
 	}
 
+	private void LoadSceneIndex(int newSceneIndex, SceneTransitionParams sceneTransitionParams) {
+		if (isLoading) return;
+		isLoading = true;
+
+		GetComponent<PlayerMovement>().enabled = false;
+		PlaySFX(sceneTransitionParams);
+		StartCoroutine(LoadSceneIndexCoroutine(newSceneIndex, sceneTransitionParams.SecondsToWait));
+	}
 
 	private bool isLoading = false;
-	private IEnumerator LoadSceneIndex(int newSceneIndex, SceneTransitionParams sceneTransitionParams) {
-		if (isLoading) yield break;
-		isLoading = true;
-		GetComponent<PlayerMovement>().enabled = false;
-		Debug.Log(sceneTransitionParams.Message);
-		_audioSource.PlayOneShot(sceneTransitionParams.Sound);
-		yield return new WaitForSeconds(sceneTransitionParams.SecondsToWait);
+	private IEnumerator LoadSceneIndexCoroutine(int newSceneIndex, float secondsToWait) {
+		yield return new WaitForSeconds(secondsToWait);
 		SceneManager.LoadScene(newSceneIndex);
+	}
+
+	private void PlaySFX(SceneTransitionParams sceneTransitionParams) {
+		Debug.Log(sceneTransitionParams.Message);
+		_audioSource.Stop();
+		if (sceneTransitionParams.AudioClip)
+		{
+			_audioSource.PlayOneShot(sceneTransitionParams.AudioClip);
+		}
+		if (sceneTransitionParams.ParticleSystem && !sceneTransitionParams.ParticleSystem.isPlaying)
+		{
+			sceneTransitionParams.ParticleSystem.Play();
+		}
 	}
 }
