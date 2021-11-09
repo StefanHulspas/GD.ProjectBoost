@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody), typeof(AudioSource))]
@@ -8,6 +5,7 @@ public class PlayerMovement : MonoBehaviour
 {
     private Rigidbody _rigidbody;
     private AudioSource _audioSource;
+    private RigidbodyConstraints _defaultRigidBodyConstraints;
 
     [SerializeField] private float _upwardThrustPower = 1000;
     [SerializeField] private float _rotationThrustPower = 50;
@@ -18,6 +16,7 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         _rigidbody = GetComponent<Rigidbody>();
+        _defaultRigidBodyConstraints = _rigidbody.constraints;
         _audioSource = GetComponent<AudioSource>();
     }
 
@@ -56,7 +55,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void ProcessRotationForce()
     {
-        Vector3 leftRotationForce = Vector3.back * _rotationThrustPower;
+        Vector3 leftRotationForce = Vector3.forward * _rotationThrustPower;
         if (Input.GetKey(KeyCode.LeftArrow) && !Input.GetKey(KeyCode.RightArrow))
         {
             _thrusterIsActive = true;
@@ -71,7 +70,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void ApplyRotation(Vector3 rotationForce) {
         _rigidbody.freezeRotation = true;
-        transform.Rotate(rotationForce * Time.deltaTime);
-        _rigidbody.freezeRotation = false;
+        Quaternion deltaRotation = Quaternion.Euler(rotationForce * Time.deltaTime);
+        _rigidbody.MoveRotation(_rigidbody.rotation * deltaRotation);
+        _rigidbody.constraints = _defaultRigidBodyConstraints;
     }
 }
